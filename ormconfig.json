@@ -1,0 +1,6 @@
+{
+  "type": "sqlite",
+  "database": "./jwt-auth.db",
+  "synchronize": true,
+  "entities": ["src/entities/**/*.ts"]
+}
