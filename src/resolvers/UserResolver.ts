@@ -1,12 +1,43 @@
-import { Arg, Resolver, Query, Mutation } from "type-graphql";
-import { hash } from "bcryptjs";
+import {
+  Arg,
+  Resolver,
+  Query,
+  Mutation,
+  Field,
+  ObjectType,
+} from "type-graphql";
+import { hash, compare } from "bcryptjs";
 import { User } from "../entities/User";
-
+import { generateAccessToken } from "../auth";
+@ObjectType()
+class LoginResponse {
+  @Field()
+  accessToken: string;
+  @Field(() => User)
+  user: User;
+}
 @Resolver()
 export class UserResolver {
   @Query(() => String)
   welcome() {
     return "Welcome!";
+  }
+
+  @Mutation(() => LoginResponse)
+  async login(
+    @Arg("email") email: string,
+    @Arg("password") password: string
+  ): Promise<LoginResponse> {
+    const user = await User.findOne({ where: { email } });
+    if (!user) throw new Error("User not found");
+
+    const isPasswordValid = await compare(password, user.password);
+    if (!isPasswordValid) throw new Error("Incorrect username or password");
+
+    return {
+      accessToken: generateAccessToken(user),
+      user,
+    };
   }
 
   @Mutation(() => Boolean)
