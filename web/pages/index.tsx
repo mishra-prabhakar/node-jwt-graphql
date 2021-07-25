@@ -1,8 +1,6 @@
-import Head from 'next/head'
-import App from '../components/App'
-import styles from '../styles/Home.module.css'
-import client from '../components/apolloClient'
-import { ApolloProvider } from '@apollo/react-hooks'
+import Head from "next/head";
+import App from "../components/App";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
@@ -14,14 +12,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <ApolloProvider client = {client}>
-          <App />
-        </ApolloProvider>
+        <App />
       </main>
 
-      <footer className={styles.footer}>
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
-  )
+  );
 }
-
