@@ -17,6 +17,13 @@
   text-align: left;
 }
 
+.message {
+  font-size: 12px;
+  width: 284px;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
 .container {
   background-color: #fff;
   border-radius: 10px;
@@ -78,7 +85,7 @@
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
-  margin-top: 20px
+  margin-top: 20px;
 }
 
 .button:active {
