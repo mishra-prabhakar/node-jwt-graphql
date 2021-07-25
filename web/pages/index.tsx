@@ -1,11 +1,10 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import App from '../components/App'
 import styles from '../styles/Home.module.css'
 import client from '../components/apolloClient'
-import { gql } from "apollo-boost";
+import { ApolloProvider } from '@apollo/react-hooks'
 
-export default function Home({ greet, loading }) {
+export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -15,28 +14,14 @@ export default function Home({ greet, loading }) {
       </Head>
 
       <main className={styles.main}>
-        <App greet={greet} loading = {loading}/>
+        <ApolloProvider client = {client}>
+          <App />
+        </ApolloProvider>
       </main>
 
       <footer className={styles.footer}>
       </footer>
     </div>
   )
-}
-
-export async function getStaticProps() {
-  const { loading, data } = await client.query({
-    query: gql`
-      query Welcome {
-        welcome
-      }
-    `,
-  });
-  console.log('data -> ', data, ' loading -> ', loading);
-  return {
-    props: {
-      greet: data.welcome,
-    },
- };
 }
 
