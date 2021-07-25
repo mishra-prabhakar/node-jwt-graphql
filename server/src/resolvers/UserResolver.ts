@@ -5,11 +5,16 @@ import {
   Mutation,
   Field,
   ObjectType,
+  Ctx,
+  UseMiddleware,
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
 import { User } from "../entities/User";
-import { generateAccessToken } from "../auth";
+import { generateAccessToken, generateRefreshToken } from "../auth";
 import validate from "../utils/password-validator";
+import { verify } from "jsonwebtoken";
+import { UserContext } from "../userContext";
+import { isAuth } from "../isAuth";
 @ObjectType()
 class LoginResponse {
   @Field()
@@ -27,13 +32,20 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Arg("email") email: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
+    @Ctx() { res }: UserContext
   ): Promise<LoginResponse> {
     const user = await User.findOne({ where: { email } });
     if (!user) throw new Error("User not found");
 
     const isPasswordValid = await compare(password, user.password);
     if (!isPasswordValid) throw new Error("Incorrect username or password");
+
+    const token = generateRefreshToken(user);
+    res.cookie("jid", token, {
+      httpOnly: true,
+      path: "/",
+    });
 
     return {
       accessToken: generateAccessToken(user),
@@ -70,5 +82,24 @@ export class UserResolver {
     }
 
     return true;
+  }
+
+  @Query(() => User, { nullable: true })
+  @UseMiddleware(isAuth)
+  User(@Ctx() context: UserContext) {
+    const authorization = context.req.headers["authorization"];
+
+    if (!authorization) {
+      return null;
+    }
+
+    try {
+      const token = authorization.split(" ")[1];
+      const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
+      return User.findOne(payload.userId);
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 }

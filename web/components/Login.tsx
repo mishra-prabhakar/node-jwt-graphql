@@ -7,8 +7,8 @@ const Overlay = ({ handleClick, handleGhostSignIn }) => {
   return (
     <div className={styles.overlay}>
       <div className={`${styles.overlayPanel} ${styles.overlayLeft}`}>
-        <h1>Welcome Back!</h1>
-        <p>To keep connected with us please login with your personal info</p>
+        <h1>Welcome!</h1>
+        <p>To keep connected with us please login with your personal info by clicking below</p>
         <button
           type="submit"
           className={`${styles.button} ${styles.ghost}`}
@@ -19,7 +19,7 @@ const Overlay = ({ handleClick, handleGhostSignIn }) => {
       </div>
       <div className={`${styles.overlayPanel} ${styles.overlayRight}`}>
         <h1>Hello!</h1>
-        <p>Enter your personal details and start journey with us</p>
+        <p>Enter your personal details and start journey with us by clicking below</p>
         <button
           className={`${styles.button} ${styles.ghost}`}
           onClick={handleClick}
