@@ -3,26 +3,37 @@ import styles from "../styles/Login.module.css";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 
-const Overlay = ({ handleClick, handleGhostSignIn }) => {
+type OverlayProps = {
+    handleSignInClick: () => void;
+    handleSignUpClick: () => void;
+}
+
+const Overlay: React.FC<OverlayProps> = ({ handleSignInClick, handleSignUpClick }) => {
   return (
     <div className={styles.overlay}>
       <div className={`${styles.overlayPanel} ${styles.overlayLeft}`}>
         <h1>Welcome!</h1>
-        <p>To keep connected with us please login with your personal info by clicking below</p>
+        <p>
+          To keep connected with us please login with your personal info by
+          clicking below
+        </p>
         <button
           type="submit"
           className={`${styles.button} ${styles.ghost}`}
-          onClick={handleGhostSignIn}
+          onClick={handleSignInClick}
         >
           Sign In
         </button>
       </div>
       <div className={`${styles.overlayPanel} ${styles.overlayRight}`}>
         <h1>Hello!</h1>
-        <p>Enter your personal details and start journey with us by clicking below</p>
+        <p>
+          Enter your personal details and start journey with us by clicking
+          below
+        </p>
         <button
           className={`${styles.button} ${styles.ghost}`}
-          onClick={handleClick}
+          onClick={handleSignUpClick}
         >
           Sign Up
         </button>
@@ -34,13 +45,9 @@ const Overlay = ({ handleClick, handleGhostSignIn }) => {
 const LoginForm = () => {
   const [containerActive, setContainerActive] = useState("left");
 
-  const handleClick = () => {
-    setContainerActive("right");
-  };
+  const handleSignInClick = () => setContainerActive("left");
 
-  const handleGhostSignIn = () => {
-    setContainerActive("left");
-  };
+  const handleSignUpClick = () => setContainerActive("right");
 
   return (
     <div
@@ -56,8 +63,8 @@ const LoginForm = () => {
       </div>
       <div className={styles.overlayContainer}>
         <Overlay
-          handleClick={handleClick}
-          handleGhostSignIn={handleGhostSignIn}
+          handleSignInClick={handleSignInClick}
+          handleSignUpClick={handleSignUpClick}
         />
       </div>
     </div>
