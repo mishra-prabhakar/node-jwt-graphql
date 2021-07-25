@@ -2,9 +2,10 @@ import react from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { gql, useMutation } from "@apollo/client";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import InputField from "./InputField";
 import styles from "../styles/Login.module.css";
+import { useCookies } from "react-cookie";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -20,24 +21,25 @@ const LOGIN = gql`
 
 const SignInForm = () => {
   const router = useRouter();
+  const [cookies, setCookie] = useCookies(["accesToken"]);
+
   const [login] = useMutation(LOGIN, {
     onCompleted(data) {
-      // const { user } = data.login;
-      // const { firstName, lastName } = user;
-      router.push('/user');
+      const { accessToken } = data.login;
+      setCookie("accessToken", accessToken, { path: "/" });
+      router.push("/user");
     },
     onError(error) {
-      console.error('Login mutation failed: ', { ...error })
-    }, 
+      console.error("Login mutation failed: ", { ...error });
+    },
   });
-  
+
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
       validationSchema={Yup.object({
         email: Yup.string().email("Invalid email address").required("Required"),
-        password: Yup.string()
-          .required("Required"),
+        password: Yup.string().required("Required"),
       })}
       onSubmit={(values) => {
         const { email, password } = values;
