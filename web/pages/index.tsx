@@ -1,7 +1,7 @@
 import Login from "../components/Login";
 import styles from "../styles/Home.module.css";
 
-const LoginPage = () => {
+const HomePage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
@@ -11,4 +11,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default HomePage;
