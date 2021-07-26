@@ -102,4 +102,14 @@ export class UserResolver {
       return null;
     }
   }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { res }: UserContext) {
+    res.cookie("jid", "", {
+      httpOnly: true,
+      path: "/",
+    });
+
+    return true;
+  }
 }

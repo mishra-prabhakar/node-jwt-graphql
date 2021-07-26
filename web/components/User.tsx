@@ -1,26 +1,41 @@
 import React, { ReactElement, useEffect } from "react";
 import styles from "../styles/User.module.css";
 import { NextRouter, useRouter } from "next/router";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import Cookies from "js-cookie";
 
 const toLogin = (router: NextRouter) => {
   router.replace("/login");
 };
 
+const LOGOUT = gql`
+  mutation LogoutMutation {
+    logout
+  }
+`;
+
+const GET_USER = gql`
+  query User {
+    User {
+      firstName
+      lastName
+      email
+    }
+  }
+`;
+
 const User = () => {
   const router = useRouter();
   const accessToken = Cookies.get("accessToken");
-console.log(`Cookies ---- ${accessToken}`);
-  const { data, loading, error } = useQuery(gql`
-    query User {
-      User {
-        firstName
-        lastName
-        email
-      }
-    }
-  `);
+  const { data, loading, error } = useQuery(GET_USER, {
+    context: {
+      headers: {
+        authorization: accessToken ? `Bearer ${accessToken}` : "",
+      },
+    },
+  });
+
+  const [logout] = useMutation(LOGOUT);
 
   useEffect(() => {
     if (data) {
@@ -34,6 +49,7 @@ console.log(`Cookies ---- ${accessToken}`);
   if (loading) return <div>loading...</div>;
 
   const handleClick = () => {
+    logout();
     Cookies.remove("accessToken", { path: "/" });
     router.replace("/login");
   };
