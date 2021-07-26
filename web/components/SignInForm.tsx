@@ -5,7 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import InputField from "./InputField";
 import styles from "../styles/Login.module.css";
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -21,12 +21,11 @@ const LOGIN = gql`
 
 const SignInForm = () => {
   const router = useRouter();
-  const [cookies, setCookie] = useCookies(["accesToken"]);
 
   const [login] = useMutation(LOGIN, {
     onCompleted(data) {
       const { accessToken } = data.login;
-      setCookie("accessToken", accessToken, { path: "/" });
+      Cookies.set("accessToken", accessToken, { path: "/" });
       router.push("/user");
     },
     onError(error) {

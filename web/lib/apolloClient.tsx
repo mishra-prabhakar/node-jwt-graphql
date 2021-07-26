@@ -1,19 +1,36 @@
 import { useMemo } from "react";
 import {
   ApolloClient,
+  createHttpLink,
   HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
 
+import { setContext } from "@apollo/client/link/context";
+import Cookies from "js-cookie";
+
 let apolloClient: ApolloClient<NormalizedCacheObject>;
+
+const httpLink = createHttpLink({
+  uri: "http://localhost:4000/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const accessToken = Cookies.get("accessToken");
+  console.log("Cookies **** ", accessToken);
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : "",
+    },
+  };
+});
 
 const createApolloClient = () => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: new HttpLink({
-      uri: "http://localhost:4000/graphql", // Add your Slash endpoint here
-    }),
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
 };
