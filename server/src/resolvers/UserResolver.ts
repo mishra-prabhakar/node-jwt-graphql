@@ -18,7 +18,7 @@ import { isAuth } from "../isAuth";
 @ObjectType()
 class LoginResponse {
   @Field()
-  accessToken: string;
+  accessToken: String;
   @Field(() => User)
   user: User;
 }
