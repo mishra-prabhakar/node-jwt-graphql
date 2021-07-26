@@ -26,6 +26,7 @@
     "apollo-server-core": "^3.0.2",
     "apollo-server-express": "^3.0.2",
     "bcryptjs": "^2.4.3",
+    "class-validator": "^0.13.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
