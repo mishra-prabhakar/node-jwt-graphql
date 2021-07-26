@@ -6,7 +6,9 @@
   "author": "prabhakar.mishra@outlook.com",
   "license": "ISC",
   "scripts": {
-    "start": "nodemon --exec ts-node src/server.ts"
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "start": "ts-node ./dist/server.js",
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
